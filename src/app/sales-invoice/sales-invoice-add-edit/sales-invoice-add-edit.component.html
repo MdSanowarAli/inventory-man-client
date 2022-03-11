@@ -1,0 +1,163 @@
+<div class="modal-xl">
+    <div class="modal-header alert-success">
+        <h5 class="modal-title" id="exampleModalLabel">{{title}}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="bsModalRef.hide()">
+            <span>&times;</span>
+        </button>
+    </div>
+    <div class="modal-body crudForm">
+        <form class="ng-pristine" name="form" #f="ngForm">
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Invoice Number: </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="" [(ngModel)]="salesInvoiceObj.invoiceNumber"
+                        name="invoiceNumber" #invoiceNumber="ngModel">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Invoice Date: </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="" [(ngModel)]="salesInvoiceObj.invoiceDate "
+                        name="invoiceDate" #invoiceDate="ngModel" autocomplete="off" bsDatepicker
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Customer Name: </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="" [(ngModel)]="salesInvoiceObj.customerName"
+                        name="customerName" #customerName="ngModel">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Total Amount: </label>
+                <div class="col-sm-8" *ngIf="salesInvoiceObj.totalAmount == null">
+                    <input type="number" class="form-control" placeholder="" [(ngModel)]="salesInvoiceObj.totalAmount"
+                        name="sellingPrice" #sellingPrice="ngModel" disabled>
+                </div>
+                <div class="col-sm-8" *ngIf="salesInvoiceObj.totalAmount != null"> 
+                    <input type="number" class="form-control" placeholder="" [(ngModel)]="salesInvoiceObj.totalAmount"
+                        name="sellingPrice" #sellingPrice="ngModel" disabled>
+                </div>
+            </div>
+
+            <!-- <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Line Number: </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="" [(ngModel)]="salesInvoiceDtlObj.lineNumber"
+                        name="lineNumber" #lineNumber="ngModel">
+                </div>
+            </div> -->
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Line Number: </label>
+                <div class="col-sm-8">
+                    <select class="form-control" [(ngModel)]="salesInvoiceDtlObj.lineNumber" name="lineNumber"
+                        #inputType="ngModel">
+                        <option value="1" class="" selected>Counter 1</option>
+                        <option value="2" class="">Counter 2</option>
+                        <option value="3" class="">Counter 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Product Name: </label>
+                <div class="col-sm-8" typeAhead>
+                    <select class="form-control input-width-20" name="courseName" name="productName"
+                        #productName="ngModel" [(ngModel)]="salesInvoiceDtlObj.productName"
+                        (ngModelChange)="selectedProduct($event)">
+                        <option *ngFor="let productList of productList; let i = index" [ngValue]="productList.productName">
+                            {{productList.productName}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Quantity: </label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" placeholder="" [(ngModel)]="salesInvoiceDtlObj.quantity"
+                        (ngModelChange)="changedQuantity($event)" name="quantity" #quantity="ngModel">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Unit Price: </label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" placeholder="" [(ngModel)]="salesInvoiceDtlObj.unitPrice"
+                        name="unitPrice" #unitPrice="ngModel">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-right">Amount: </label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" placeholder="" [(ngModel)]="salesInvoiceDtlObj.amount"
+                        name="amount" #amount="ngModel">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4 breadcrumb m-0 p-1 btn-all">
+                    <button type=" button" class="btn btn-info" (click)="addProductDtl()">Add Product Detail</button>
+                </div>
+            </div>
+
+        </form>
+
+        <div col-sm-12>
+            <table class="table table-bordered bg-white">
+                <thead>
+                  <tr>
+                    <th style="width:15px;text-align: center" >Sl.</th>
+                    <th nowrap>Line Number</th>
+                    <th nowrap class="text-center">ProductId</th>
+                    <th nowrap class="text-center">Product Name</th>
+                    <th nowrap class="text-center">Quantity</th>
+                    <th nowrap class="text-center">Unit Price</th>
+                    <th nowrap class="text-center">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val of salesInvoiceDtlList ; let i = index;">
+                    <th style="width:15px;text-align: center">{{i+1}}</th>
+                    <td>{{val.lineNumber}}</td>
+                    <td>{{val.productId}}</td>
+                    <td>{{val.productName}}</td>
+                    <td>{{val.quantity}}</td>
+                    <td>{{val.unitPrice}}</td>
+                    <td>{{val.amount}}</td>
+                    <!-- <td class="text-center">
+                      {{val.quantity}}
+                      <input type="number" class="form-control" 
+                      [(ngModel)]="val.itemQty" 
+                      (ngModelChange)="changeQuantity(val)"
+                      (change)="afterChangeQuantity(val)">
+                    </td> -->
+                    <!-- <td> {{val.status}}</td>
+                      <button class="form-control"
+                      type="button"
+                      (click)="removeItem(val)"
+                      style="height: 23px;
+                      padding: 0px 2px;
+                      background: #c53409;
+                      color: #fff;"> X </button>
+                    </td> -->
+                  </tr>
+                  <!-- <tr *ngIf="salesInvoiceDetailsList.length==0">
+                    <td colspan="9" class="text-center" 
+                     style="color:red;font-weight:bold"
+                     ><span>No Data Found!</span>
+                  </tr> -->
+                </tbody>
+              </table>
+        </div>
+    </div>
+    <div class="modal-footer breadcrumb m-0 p-1 btn-all">
+        <button type="button" class="btn btn-primary" (click)="saveOrUpdate()">Save</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="bsModalRef.hide()">Close</button>
+
+    </div>
+</div>
